@@ -128,11 +128,16 @@ export const LandingNav = ({ isMobile }) => {
         alignItems: 'center',
         child: Container({
             width: '100%',
-            height: 72,
+            // Not a fixed 72: when the line does not fit, the bar grows around a
+            // second row instead of clipping it (a Container paints overflow).
+            minHeight: 72,
+            paddingTop: 12,
+            paddingBottom: 12,
             maxWidth: layout.maxWidth,
             direction: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
+            wrap: 'wrap',
             gap: 24,
             paddingLeft: layout.gutterWide,
             paddingRight: layout.gutterWide,
@@ -152,6 +157,9 @@ export const LandingNav = ({ isMobile }) => {
                             width: 'auto',
                             gap: 24,
                             alignItems: 'center',
+                            // Below ~900px the five anchors take their own row and
+                            // the reserve button keeps its full width.
+                            wrap: 'wrap',
                             children: links,
                         }),
                         Button({
