@@ -1,72 +1,91 @@
-name: Deploy docs
-
-# Builds the flet-box documentation site and publishes it to GitHub Pages so it
-# is the official, always-up-to-date docs at:
-#   https://kuko53348.github.io/flet-box-docs/
-# Enable once: repo Settings -> Pages -> Source = "GitHub Actions".
+# Workflow for building and deploying this PWA to GitHub Pages, in the shape the
+# Pages template ships: a build job and a deploy job that needs it, the three
+# official Pages actions, and one concurrent "pages" deployment that is never
+# cancelled while it is running.
+name: Deploy guantanamera with GitHub Pages dependencies preinstalled
 
 on:
+  # Runs on pushes targeting the default branch
   push:
-    branches: [ main ]
+    branches: ["main"]
+
+  # A tagged push is a release: it redeploys the site and, unlike a plain push,
+  # it keeps www/config.json, so installed apps may update to it.
+  tags: ["v*"]
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# One deployment at a time; a newer push cancels the in-flight one.
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
+  # Build job
   build:
-    name: Build site
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout docs app
-        uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # flet-box is not published on npm yet, so pull the framework source and
-      # install it as a local file dependency (see "Point flet-box at checkout").
-      # Both repos are public, so no token is required. If you publish the
-      # package to npm later, delete this step and the npm pkg set step, and the
-      # plain `npm install` below will resolve flet-box from the registry.
-      - name: Checkout flet-box framework
-        uses: actions/checkout@v5
-        with:
-          repository: kuko53348/flet-box
-          ref: refactory
-          path: vendor/flet-box
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
+      # Jekyll builds from a gem the runner already has; this app builds from npm,
+      # so Node is the one step the template does not need and we do.
       - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
 
-      - name: Point flet-box at the local checkout
-        run: npm pkg set dependencies.flet-box=file:vendor/flet-box
-
-      # package-lock.json is gitignored, so use `npm install` (not `npm ci`).
       - name: Install dependencies
         run: npm install
 
-      # `npm run build` = flet-box createBundle www && node scripts/copy-docs.mjs www
-      - name: Build docs site
+      # The anti-hallucination gate: an invented widget or prop, a positional
+      # widget call, a foreign-framework import. A red build here is cheaper than
+      # a live page that renders a broken layout.
+      - name: Check app API usage (npm run check)
+        run: npm run check
+
+      # `flet-box createBundle www` — the whole app becomes one hashed bundle plus
+      # the copied assets the manifest lists.
+      - name: Build site (npm run build)
         run: npm run build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
+      # www/config.json is the OTA manifest: an installed app fetches it and
+      # compares its `hash` with the bundle it runs. Publishing it from an ordinary
+      # push would offer that unfinished build to every device that checks for
+      # updates, so only a release tag ships it. The site itself deploys either
+      # way; a missing manifest reads as "no update published yet".
+      - name: Keep the update feed on releases only
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: rm -f www/config.json
+
+      - name: Print the address
+        run: |
+          owner=$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')
+          echo "  site:    https://$owner.github.io/${GITHUB_REPOSITORY#*/}/"
+          echo "  If that 404s after a green run: Settings -> Pages -> Source = GitHub Actions"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: www
 
+  # Deployment job
   deploy:
-    name: Deploy to Pages
-    needs: build
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
