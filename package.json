@@ -11,7 +11,7 @@
     "assets:prune": "flet-box prune-assets",
     "assets:clean": "flet-box prune-assets --apply",
     "images": "flet-box images assets/landing --budget 40 --referenced",
-    "build": "flet-box createBundle www",
+    "build": "flet-box createBundle www && node scripts/complete-www.mjs",
     "start": "npm run dev",
     "android:init": "npm run build && cap add android",
     "android:sync": "npm run build && cap sync android && npm run android:icons",
