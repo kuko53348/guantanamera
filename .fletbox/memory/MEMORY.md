@@ -5,3 +5,4 @@ Read this at the start of every session; open the files it points at.
 
 - [Project baseline](notes/baseline.md) — template, flet-box version, verified commands
 - [Framework gotchas](notes/framework-gotchas.md) — light theme pin, Container bg, stackPosition, checker shorthand false positive
+- [Asset pipeline](notes/asset-pipeline.md) — assets/ is only what loads; .webp are the masters; 40 KB budget, prune/images scripts
