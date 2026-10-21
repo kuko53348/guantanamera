@@ -1,0 +1,30 @@
+{
+  "name": "Guantanamera — Cuban Restaurant, Varadero",
+  "short_name": "Guantanamera",
+  "description": "Cuban criollo cooking, lechón, lobster and mojitos by the sea at Plaza América, Varadero.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay"],
+  "theme_color": "#B4431F",
+  "background_color": "#FBF5E9",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./assets/landing/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/landing/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "handle_links": "preferred"
+}

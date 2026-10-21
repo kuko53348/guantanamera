@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="./src/assets/fonts/icons.css">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./assets/landing/favicon.png" sizes="192x192" type="image/png">
+    <link rel="apple-touch-icon" href="./assets/landing/favicon.png">
+    <link rel="preload" as="image" href="./assets/landing/door.webp">
+
+    <title>Guantanamera | Cuban Restaurant in Varadero, Cuba</title>
+    <meta name="description" content="Cuban criollo cooking, slow-roasted lechón, grilled lobster and mojitos by the sea. Guantanamera, inside Plaza América, Varadero. Open every day — call (53 45) 668181.">
+    <meta name="keywords" content="Guantanamera Varadero, Cuban restaurant Varadero, Plaza América restaurant, Cuban food Cuba, lechón asado, paella cubana, lobster Varadero, mojito Varadero">
+    <meta name="author" content="Guantanamera Restaurante">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#B4431F">
+
+    <meta property="og:title" content="Guantanamera | Cuban Restaurant in Varadero">
+    <meta property="og:description" content="Walk through the blue door. Taste the real Cuba — criollo cooking, lobster, lechón and piña coladas by the sea at Plaza América, Varadero.">
+    <meta property="og:type" content="restaurant">
+    <meta property="og:image" content="./assets/landing/og-cover.jpg">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Guantanamera | Cuban Restaurant in Varadero">
+    <meta name="twitter:description" content="Cuban criollo cooking and mojitos by the sea, inside Plaza América, Varadero.">
+    <meta name="twitter:image" content="./assets/landing/og-cover.jpg">
+
+    <style>
+        html, body { margin: 0; padding: 0; background: #FBF5E9; }
+        body { -webkit-text-size-adjust: 100%; font-family: system-ui, sans-serif; }
+        #root { min-height: 100vh; }
+    </style>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "flet-box": "./node_modules/flet-box/src/index.js"
+            }
+        }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "Guantanamera",
+        "alternateName": "Guantanamera Restaurante",
+        "description": "Cuban criollo restaurant inside Plaza América, Varadero. Slow-roasted lechón, Cuban paella, grilled lobster and cocktails by the sea.",
+        "servesCuisine": ["Cuban", "Criollo", "Caribbean"],
+        "telephone": "+53 45 668181",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Centro Comercial Plaza América",
+            "addressLocality": "Varadero",
+            "addressRegion": "Matanzas",
+            "addressCountry": "CU"
+        },
+        "sameAs": ["https://www.instagram.com/guantanamera397/"],
+        "acceptsReservations": "True",
+        "image": "./assets/landing/og-cover.jpg"
+    }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('Service Worker registered', reg))
+                .catch(err => console.log('Service Worker registration error', err));
+        }
+    </script>
+    <script type="module" src="src/app.js"></script>
+</body>
+</html>

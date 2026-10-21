@@ -1,0 +1,22 @@
+---
+description: FletBox app rules — real APIs only, no other framework
+globs: "**/*.js"
+alwaysApply: true
+---
+
+This is a FletBox app (vanilla JS, ESM, offline). The full contract is
+[AGENTS.md](../../AGENTS.md); read it before editing.
+
+- Widgets are function calls returning an element: `Text({ text: "Hi", size: 18 })`.
+  No JSX, no positional args, no Flutter/Vue/Svelte/React syntax or imports.
+- Before using a widget or prop you have not just seen in
+  `.fletbox/api/cheatsheet.md`, look it up: `flet-box unpack <Widget>` (or
+  `npm run check -- --props <Widget>`). If it is not listed, it does not exist —
+  do not invent it. `unpack --example` prints a call that is safe to paste.
+- Design rules: one brand color per screen, taken from the `colors` tokens —
+  never a hex literal. Sizes come from the 8-based scale only:
+  4 · 8 · 12 · 16 · 18 · 24 · 32 · 48 spacing, radii 4/8/12/16/999, type
+  12/14/16/18/24/32. See AGENTS.md §4.
+- Run `npm run check` after every change and fix what it reports.
+- Check `.fletbox/memory/MEMORY.md` at session start; record new non-obvious
+  findings there instead of re-deriving them.

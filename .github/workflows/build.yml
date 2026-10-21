@@ -1,0 +1,164 @@
+name: Build guantanamera
+
+# One push (or manual trigger) fans out into three parallel jobs:
+#   web     -> bundles the PWA; publishes to GitHub Pages ONLY on release
+#              tags (v*), which is what triggers OTA self-updates
+#   android -> compiles a debug APK and uploads it as an artifact
+#   ios     -> compiles a simulator .app and uploads it as an artifact
+# All three run at the same time on separate runners.
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Cancel superseded runs on the same branch to save Actions minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# The generated app depends on the public `flet-box` npm package. If you are
+# developing against a local copy, publish it (or vendor it) before these jobs
+# can `npm install` it. package-lock.json is gitignored, so we use npm install.
+
+jobs:
+  # ---------- WEB: bundle + GitHub Pages preview ----------
+  web:
+    name: Web (Pages)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      # Fails the build on an invented widget/prop, a positional widget call or a
+      # foreign-framework import. See AGENTS.md section 4.
+      - name: Check app API usage (npm run check)
+        run: npm run check
+
+      - name: Bundle web app (flet-box createBundle www)
+        run: npm run build
+
+      # Pages is the OTA update source (www/config.json), so it is published
+      # ONLY for release tags (v*) created by `flet-box release`. Ordinary
+      # pushes still build (to catch breakage in CI) but never publish an
+      # update, so test builds cannot reach installed apps.
+      - name: Upload Pages artifact
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: www
+
+      # Enable Pages first: Settings -> Pages -> Source = "GitHub Actions".
+      - name: Deploy to GitHub Pages
+        id: deployment
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/deploy-pages@v5
+
+  # ---------- ANDROID: debug APK ----------
+  android:
+    name: Android (APK)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # ubuntu runners ship the Android SDK; this step accepts licences and
+      # installs any packages the Capacitor Gradle build asks for.
+      - uses: android-actions/setup-android@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Bundle web app
+        run: npm run build
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Sync web assets to Android
+        run: npx cap sync android
+
+      - name: Build debug APK
+        run: |
+          cd android
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v6
+        with:
+          name: guantanamera-android-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+  # ---------- iOS: simulator build ----------
+  ios:
+    name: iOS (simulator)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Bundle web app
+        run: npm run build
+
+      - name: Add iOS platform
+        run: npx cap add ios
+
+      - name: Sync web assets to iOS
+        run: npx cap sync ios
+
+      - name: Install CocoaPods
+        run: |
+          cd ios/App
+          pod install --repo-update
+
+      # Signed device/App Store builds need your Apple certificates; CI here
+      # builds an unsigned simulator app so no secrets are required.
+      - name: Build for simulator
+        run: |
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Upload .app
+        uses: actions/upload-artifact@v6
+        with:
+          name: guantanamera-ios-simulator
+          path: ios/App/build/Build/Products/Debug-iphonesimulator/App.app
+          if-no-files-found: error

@@ -1,0 +1,10 @@
+{
+  "update": {
+    "url": "https://TU-USUARIO.github.io/TU-REPO/",
+    "mode": "prompt",
+    "channel": "stable",
+    "mandatory": false,
+    "minNativeVersion": "0.0.0",
+    "notes": ""
+  }
+}

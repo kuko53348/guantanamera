@@ -1,0 +1,10 @@
+{
+  "appId": "com.fletbox.guantanamera",
+  "appName": "guantanamera",
+  "webDir": "www",
+  "backgroundColor": "#1a1a2e",
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "https"
+  }
+}
