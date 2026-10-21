@@ -1,6 +1,7 @@
 {
   "name": "guantanamera",
   "version": "1.0.0",
+  "repository": "https://github.com/kuko53348/guantanamera.git",
   "type": "module",
   "scripts": {
     "dev": "bash run.sh",

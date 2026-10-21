@@ -1,6 +1,5 @@
 {
   "update": {
-    "url": "https://kuko53348.github.io/guantanamera/",
     "mode": "prompt",
     "channel": "stable",
     "mandatory": false,
