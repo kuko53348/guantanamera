@@ -1,6 +1,7 @@
 // components/sections/SeaBand.js — a full-bleed breath between plates.
 import { Column, Container, Row, Text } from 'flet-box';
 import { colors, fonts } from '../../theme.js';
+import { t } from '../../utils/i18n.js';
 import { Pill } from '../ui/Pill.js';
 
 export const SeaBand = ({ isMobile }) =>
@@ -30,7 +31,7 @@ export const SeaBand = ({ isMobile }) =>
                             ],
                         }),
                         Text({
-                            text: 'The view comes with the meal.',
+                            text: t('The view comes with the meal.'),
                             size: 32,
                             weight: 700,
                             color: colors.white,
@@ -39,7 +40,9 @@ export const SeaBand = ({ isMobile }) =>
                             lineHeight: 1.2,
                         }),
                         Text({
-                            text: 'Palms, turquoise water and a table that nobody wants to leave. This is the terrace — and it is yours for as long as the coffee lasts.',
+                            text: t(
+                                'Palms, turquoise water and a table that nobody wants to leave. This is the terrace — and it is yours for as long as the coffee lasts.',
+                            ),
                             size: 16,
                             color: 'rgba(255,255,255,0.72)',
                             align: 'center',

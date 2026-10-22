@@ -1,6 +1,7 @@
 // components/ui/Pill.js — small badge used for hours, location and metadata.
 import { Container, Icon, Text, border, rgba } from 'flet-box';
 import { colors } from '../../theme.js';
+import { isCaseless, t } from '../../utils/i18n.js';
 
 export const Pill = ({ icon, label, tone = 'sand', size = 12 }) => {
     const tones = {
@@ -45,11 +46,11 @@ export const Pill = ({ icon, label, tone = 'sand', size = 12 }) => {
         children: [
             Icon({ name: icon, size: 16, color: palette.icon }),
             Text({
-                text: label,
+                text: t(label),
                 size,
                 weight: 500,
                 color: palette.fg,
-                letterSpacing: 1,
+                letterSpacing: isCaseless() ? 0 : 1,
             }),
         ],
     });

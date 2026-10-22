@@ -79,17 +79,40 @@ self.addEventListener('fetch', event => {
         const hit = await cache.match(req);
         if (hit) return hit;
       }
+
+      // A page load that neither the host nor the cache can answer must still
+      // boot the app: the router takes the URL from there. Asset requests keep
+      // their own failure, because replacing a missing image with a document is
+      // how a broken site becomes an undebuggable one.
+      const shell = async () => {
+        if (req.mode !== 'navigate') return null;
+        const cached = await cache.match(BASE + 'index.html');
+        if (cached) return cached;
+        try {
+          const fresh = await fetch(BASE + 'index.html', { cache: 'no-store' });
+          return fresh.ok ? fresh : null;
+        } catch (err) {
+          return null;
+        }
+      };
+
       try {
         const fresh = await fetch(req, { cache: 'no-store' });
-        if (fresh.ok) cache.put(req, fresh.clone());
-        return fresh;
+        if (fresh.ok) {
+          cache.put(req, fresh.clone());
+          return fresh;
+        }
+        // GitHub Pages has no SPA rewrite: refreshing /guantanamera/menu answers
+        // with its own "Page not found". That is a response, not a thrown error,
+        // so a fallback that lives only in the catch below never runs and the
+        // app looks broken on exactly the URL a shared link or a reload gives.
+        const fallback = await shell();
+        return fallback || fresh;
       } catch (err) {
         const cached = await cache.match(req);
         if (cached) return cached;
-        if (req.mode === 'navigate') {
-          const shell = await cache.match(BASE + 'index.html');
-          if (shell) return shell;
-        }
+        const fallback = await shell();
+        if (fallback) return fallback;
         return Response.error();
       }
     })()

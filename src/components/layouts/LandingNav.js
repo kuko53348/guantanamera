@@ -1,10 +1,14 @@
 // components/layouts/LandingNav.js — the sticky chrome of the landing page.
-// Desktop: wordmark, five anchors, phone + reserve. Mobile: wordmark + call,
-// with the same anchors on a second, horizontally scrollable line.
+// Desktop: wordmark with the six language buttons on the first row, the anchors
+// and the phone button on the second. Mobile: wordmark + call, then the anchors
+// on a wrapping line, then the languages. Nothing here scrolls sideways: a strip
+// you have to drag reads as a broken bar on a phone, so the lines wrap and the
+// header grows instead.
 import { Button, Column, Container, Icon, Row, Text, border } from 'flet-box';
 import { colors, fonts, layout } from '../../theme.js';
 import { NAV_LINKS, RESTAURANT, ROUTES } from '../../data/content.js';
 import { callRestaurant, goToSection } from '../../utils/links.js';
+import { getLang, isCaseless, LOCALES, setLang, t } from '../../utils/i18n.js';
 
 const Brand = ({ isMobile }) =>
     Row({
@@ -47,33 +51,90 @@ const Brand = ({ isMobile }) =>
                     }),
                     isMobile
                         ? Text({
-                              text: 'Cuban kitchen · Varadero',
+                              text: t('Cuban kitchen · Varadero'),
                               size: 12,
                               weight: 500,
                               color: colors.textSecondary,
                               letterSpacing: 1,
                           })
                         : Text({
-                              text: 'Restaurante Cubano · Varadero',
+                              text: t('Restaurante Cubano · Varadero'),
                               size: 12,
                               weight: 500,
                               color: colors.textSecondary,
-                              letterSpacing: 2,
-                              textTransform: 'uppercase',
+                              letterSpacing: isCaseless() ? 0 : 2,
+                              textTransform: isCaseless() ? 'none' : 'uppercase',
                           }),
                 ],
             }),
         ],
     });
 
-const NavLink = ({ label, id, route }) =>
-    Text({
-        text: label,
+const NavLink = ({ label, id, route, icon }) => {
+    const text = Text({
+        text: t(label),
         size: 14,
         weight: 500,
         color: colors.textSecondary,
+        // flexShrink keeps a two-word anchor on one line: squeezed, "Our story"
+        // used to break in half and the last anchor fell off the edge.
+        flexShrink: 0,
         cursor: 'pointer',
         onPress: () => goToSection(id, route),
+    });
+    // A link with an icon is not a section of the restaurant — it is a page of
+    // its own, and the mark is what tells it apart from the anchors.
+    return icon
+        ? Row({
+              width: 'auto',
+              flexShrink: 0,
+              gap: 6,
+              alignItems: 'center',
+              cursor: 'pointer',
+              onPress: () => goToSection(id, route),
+              children: [Icon({ name: icon, size: 16, color: colors.primary }), text],
+          })
+        : text;
+};
+
+const LangPill = ({ code, short }) => {
+    const active = getLang() === code;
+    return Container({
+        width: 'auto',
+        flexShrink: 0,
+        paddingTop: 3,
+        paddingBottom: 3,
+        paddingLeft: 8,
+        paddingRight: 8,
+        borderRadius: 999,
+        bgColor: active ? colors.primary : 'transparent',
+        border: border(1, 'solid', active ? colors.primary : colors.border),
+        cursor: 'pointer',
+        onPress: () => setLang(code),
+        child: Text({
+            text: short,
+            size: 11,
+            weight: 600,
+            color: active ? colors.white : colors.textSecondary,
+            letterSpacing: 0.5,
+        }),
+    });
+};
+
+// Always buttons, never a <select>: a guest should see every language and tap one
+// without opening anything. The pills wrap rather than shrink, so adding a locale
+// to LOCALES costs a row instead of clipping a button.
+const LanguageSwitcher = () =>
+    Row({
+        width: 'auto',
+        flexShrink: 0,
+        gap: 6,
+        alignItems: 'center',
+        wrap: 'wrap',
+        children: [
+            Icon({ name: 'translate', size: 18, color: colors.textSecondary }),
+            ...LOCALES.map((locale) => LangPill(locale)),
+        ],
     });
 
 export const LandingNav = ({ isMobile }) => {
@@ -95,26 +156,23 @@ export const LandingNav = ({ isMobile }) => {
                     width: '100%',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    children: [
-                        Brand({ isMobile: true }),
-                        Icon({
-                            name: 'phone',
-                            size: 24,
-                            color: colors.primary,
-                            onPress: () => callRestaurant(RESTAURANT.phoneHref),
-                        }),
-                    ],
+                    children: [Brand({ isMobile: true }), Icon({
+                        name: 'phone',
+                        size: 24,
+                        color: colors.primary,
+                        onPress: () => callRestaurant(RESTAURANT.phoneHref),
+                    })],
                 }),
                 Container({
                     width: '100%',
                     bgColor: 'transparent',
                     direction: 'row',
-                    gap: 24,
+                    gap: 16,
                     alignItems: 'center',
-                    overflowX: 'auto',
-                    overflowY: 'hidden',
+                    wrap: 'wrap',
                     children: links,
                 }),
+                LanguageSwitcher(),
             ],
         });
     }
@@ -128,42 +186,47 @@ export const LandingNav = ({ isMobile }) => {
         alignItems: 'center',
         child: Container({
             width: '100%',
-            // Not a fixed 72: when the line does not fit, the bar grows around a
-            // second row instead of clipping it (a Container paints overflow).
+            // Two deliberate rows: brand with the languages above, the anchors
+            // with the call-to-action below. One line cannot hold all four groups
+            // inside the 1200 column (they need ~1430px), and a Row that overflows
+            // silently drops the CTA onto its own line under the brand.
             minHeight: 72,
             paddingTop: 12,
             paddingBottom: 12,
             maxWidth: layout.maxWidth,
-            direction: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            wrap: 'wrap',
-            gap: 24,
+            direction: 'column',
+            alignItems: 'stretch',
+            gap: 12,
             paddingLeft: layout.gutterWide,
             paddingRight: layout.gutterWide,
             bgColor: 'transparent',
             children: [
-                Brand({ isMobile: false }),
                 Row({
-                    // The nav is three inline groups on one 1200 line. Each one
-                    // sizes to its content so the links sit flush against the
-                    // reserve button instead of stretching across the bar.
-                    width: 'auto',
-                    flexShrink: 0,
-                    gap: 24,
+                    width: '100%',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
+                    wrap: 'wrap',
+                    gap: 16,
+                    children: [Brand({ isMobile: false }), LanguageSwitcher()],
+                }),
+                Row({
+                    width: '100%',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    wrap: 'wrap',
+                    gap: 24,
                     children: [
                         Row({
                             width: 'auto',
                             gap: 24,
                             alignItems: 'center',
-                            // Below ~900px the five anchors take their own row and
+                            // Below ~900px the six anchors take their own row and
                             // the reserve button keeps its full width.
                             wrap: 'wrap',
                             children: links,
                         }),
                         Button({
-                            text: 'Reserve a table',
+                            text: t('Reserve a table'),
                             iconLeft: 'phone',
                             size: 'large',
                             borderRadius: 999,

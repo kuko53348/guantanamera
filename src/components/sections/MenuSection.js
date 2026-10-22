@@ -5,6 +5,7 @@ import { Button, Column, Container, Icon, Row, Text, border } from 'flet-box';
 import { colors, fonts } from '../../theme.js';
 import { MENU, RESTAURANT } from '../../data/content.js';
 import { callRestaurant } from '../../utils/links.js';
+import { t, tList, tTime } from '../../utils/i18n.js';
 import { Grid } from '../ui/Grid.js';
 import { Section } from '../ui/Section.js';
 import { SectionHeading } from '../ui/SectionHeading.js';
@@ -39,7 +40,7 @@ const MenuItem = (item) =>
                         children: [
                             Icon({ name: 'schedule', size: 16, color: colors.primary }),
                             Text({
-                                text: item.time,
+                                text: tTime(item.time),
                                 size: 12,
                                 weight: 500,
                                 color: colors.textSecondary,
@@ -49,13 +50,13 @@ const MenuItem = (item) =>
                 ],
             }),
             Text({
-                text: item.description,
+                text: t(item.description),
                 size: 14,
                 color: colors.textSecondary,
                 lineHeight: 1.5,
             }),
             Text({
-                text: item.ingredients,
+                text: tList(item.ingredients),
                 size: 12,
                 color: colors.textDisabled,
                 lineHeight: 1.5,
@@ -76,13 +77,13 @@ const MenuPanel = (category, isMobile) =>
                 gap: 8,
                 children: [
                     Text({
-                        text: category.note,
+                        text: t(category.note),
                         size: 14,
                         color: colors.textSecondary,
                         italic: true,
                     }),
                     Text({
-                        text: `${category.items.length} plates · made to share`,
+                        text: `${category.items.length} ${t('plates · made to share')}`,
                         size: 12,
                         color: colors.textDisabled,
                     }),
@@ -132,14 +133,16 @@ export const MenuSection = ({ isMobile }) =>
                         alignItems: 'flex-start',
                         children: [
                             Text({
-                                text: 'Can’t decide?',
+                                text: t('Can’t decide?'),
                                 size: 18,
                                 weight: 600,
                                 color: colors.text,
                                 fontFamily: fonts.display,
                             }),
                             Text({
-                                text: 'Order the Especial Guantanamera — lobster, shrimp, fish and pork for the middle of the table.',
+                                text: t(
+                                    'Order the Especial Guantanamera — lobster, shrimp, fish and pork for the middle of the table.',
+                                ),
                                 size: 14,
                                 color: colors.textSecondary,
                                 lineHeight: 1.5,
@@ -147,7 +150,7 @@ export const MenuSection = ({ isMobile }) =>
                         ],
                     }),
                     Button({
-                        text: 'Call to reserve',
+                        text: t('Call to reserve'),
                         iconLeft: 'phone',
                         size: 'large',
                         borderRadius: 999,
@@ -159,7 +162,7 @@ export const MenuSection = ({ isMobile }) =>
                 ],
             }),
             Text({
-                text: 'Vegetarian plates are available — ask your server and the kitchen will take care of it.',
+                text: t('Vegetarian plates are available — ask your server and the kitchen will take care of it.'),
                 size: 12,
                 color: colors.textSecondary,
                 align: 'center',

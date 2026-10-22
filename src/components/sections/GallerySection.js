@@ -5,6 +5,7 @@ import { Button, Container, Image, Row, Text } from 'flet-box';
 import { colors } from '../../theme.js';
 import { GALLERY, RESTAURANT } from '../../data/content.js';
 import { openExternal } from '../../utils/links.js';
+import { t } from '../../utils/i18n.js';
 import { Grid } from '../ui/Grid.js';
 import { Section } from '../ui/Section.js';
 import { SectionHeading } from '../ui/SectionHeading.js';
@@ -36,7 +37,7 @@ const GalleryTile = ({ item, isMobile }) =>
                 paddingLeft: 12,
                 paddingRight: 12,
                 child: Text({
-                    text: item.caption,
+                    text: t(item.caption),
                     size: 12,
                     weight: 500,
                     color: colors.white,
@@ -73,12 +74,15 @@ export const GallerySection = ({ isMobile }) =>
                 wrap: true,
                 children: [
                     Text({
-                        text: `Follow ${RESTAURANT.instagramHandle} for the daily plate.`,
+                        text: t('Follow {handle} for the daily plate.').replace(
+                            '{handle}',
+                            RESTAURANT.instagramHandle,
+                        ),
                         size: 14,
                         color: colors.textSecondary,
                     }),
                     Button({
-                        text: 'Follow on Instagram',
+                        text: t('Follow on Instagram'),
                         iconLeft: 'photo_camera',
                         variant: 'outlined',
                         size: 'large',

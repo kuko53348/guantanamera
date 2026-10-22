@@ -2,6 +2,7 @@
 import { Column, Container, Icon, Rating, Row, Text, border } from 'flet-box';
 import { colors, fonts } from '../../theme.js';
 import { REVIEWS } from '../../data/content.js';
+import { t } from '../../utils/i18n.js';
 import { Grid } from '../ui/Grid.js';
 import { Section } from '../ui/Section.js';
 import { SectionHeading } from '../ui/SectionHeading.js';
@@ -52,7 +53,7 @@ const ReviewCard = (review) =>
                         fontFamily: fonts.display,
                     }),
                     Text({
-                        text: review.origin,
+                        text: t(review.origin),
                         size: 12,
                         color: colors.textSecondary,
                     }),
@@ -98,7 +99,7 @@ export const ReviewsSection = ({ isMobile }) =>
                         gap: 2,
                     }),
                     Text({
-                        text: '4.9 / 5 · loved by guests from Varadero and everywhere else',
+                        text: t('4.9 / 5 · loved by guests from Varadero and everywhere else'),
                         size: 12,
                         color: colors.textSecondary,
                         align: 'center',

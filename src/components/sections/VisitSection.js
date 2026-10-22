@@ -3,6 +3,7 @@ import { Accordion, Button, Column, Container, Icon, Image, Row, Text, border } 
 import { colors, fonts } from '../../theme.js';
 import { FAQ, RESTAURANT } from '../../data/content.js';
 import { callRestaurant, openExternal } from '../../utils/links.js';
+import { isCaseless, t } from '../../utils/i18n.js';
 import { Grid } from '../ui/Grid.js';
 import { Section } from '../ui/Section.js';
 import { SectionHeading } from '../ui/SectionHeading.js';
@@ -29,15 +30,15 @@ const Detail = ({ icon, label, value }) =>
                 alignItems: 'flex-start',
                 children: [
                     Text({
-                        text: label,
+                        text: t(label),
                         size: 12,
                         weight: 600,
                         color: colors.textSecondary,
-                        letterSpacing: 2,
-                        textTransform: 'uppercase',
+                        letterSpacing: isCaseless() ? 0 : 2,
+                        textTransform: isCaseless() ? 'none' : 'uppercase',
                     }),
                     Text({
-                        text: value,
+                        text: t(value),
                         size: 16,
                         color: colors.text,
                         lineHeight: 1.5,
@@ -80,7 +81,7 @@ const ReserveCard = ({ isMobile }) =>
                         alignItems: 'flex-start',
                         children: [
                             Text({
-                                text: 'Reserve a table',
+                                text: t('Reserve a table'),
                                 size: 24,
                                 weight: 700,
                                 color: colors.text,
@@ -88,7 +89,9 @@ const ReserveCard = ({ isMobile }) =>
                                 lineHeight: 1.2,
                             }),
                             Text({
-                                text: 'Walk-ins are always welcome. For groups, birthdays or a sunset on the terrace, call ahead and we will set the table.',
+                                text: t(
+                                    'Walk-ins are always welcome. For groups, birthdays or a sunset on the terrace, call ahead and we will set the table.',
+                                ),
                                 size: 14,
                                 color: colors.textSecondary,
                                 lineHeight: 1.5,
@@ -103,12 +106,12 @@ const ReserveCard = ({ isMobile }) =>
                         gap: 4,
                         children: [
                             Text({
-                                text: 'Reservations',
+                                text: t('Reservations'),
                                 size: 12,
                                 weight: 600,
                                 color: colors.textSecondary,
-                                letterSpacing: 2,
-                                textTransform: 'uppercase',
+                                letterSpacing: isCaseless() ? 0 : 2,
+                                textTransform: isCaseless() ? 'none' : 'uppercase',
                             }),
                             Text({
                                 text: RESTAURANT.phone,
@@ -118,14 +121,14 @@ const ReserveCard = ({ isMobile }) =>
                                 fontFamily: fonts.display,
                             }),
                             Text({
-                                text: `${RESTAURANT.hours} · ${RESTAURANT.hoursDetail}`,
+                                text: `${t(RESTAURANT.hours)} · ${t(RESTAURANT.hoursDetail)}`,
                                 size: 12,
                                 color: colors.textSecondary,
                             }),
                         ],
                     }),
                     Button({
-                        text: 'Call to reserve',
+                        text: t('Call to reserve'),
                         iconLeft: 'phone',
                         size: 'large',
                         fullWidth: true,
@@ -136,7 +139,7 @@ const ReserveCard = ({ isMobile }) =>
                         onPress: () => callRestaurant(RESTAURANT.phoneHref),
                     }),
                     Button({
-                        text: 'Message us on Instagram',
+                        text: t('Message us on Instagram'),
                         iconLeft: 'photo_camera',
                         variant: 'outlined',
                         size: 'large',
@@ -179,7 +182,7 @@ export const VisitSection = ({ isMobile }) =>
                                   Detail({
                                       icon: 'schedule',
                                       label: 'Hours',
-                                      value: `${RESTAURANT.hours} · ${RESTAURANT.hoursDetail}`,
+                                      value: `${t(RESTAURANT.hours)} · ${t(RESTAURANT.hoursDetail)}`,
                                   }),
                                   Detail({
                                       icon: 'photo_camera',
@@ -191,7 +194,7 @@ export const VisitSection = ({ isMobile }) =>
                                       wrap: true,
                                       children: [
                                           Button({
-                                              text: 'Get directions',
+                                              text: t('Get directions'),
                                               iconLeft: 'map',
                                               size: 'large',
                                               borderRadius: 999,
@@ -201,7 +204,7 @@ export const VisitSection = ({ isMobile }) =>
                                               onPress: () => openExternal(RESTAURANT.directions),
                                           }),
                                           Button({
-                                              text: 'Call',
+                                              text: t('Call'),
                                               iconLeft: 'phone',
                                               variant: 'outlined',
                                               size: 'large',
@@ -240,7 +243,7 @@ export const VisitSection = ({ isMobile }) =>
                                   Detail({
                                       icon: 'schedule',
                                       label: 'Hours',
-                                      value: `${RESTAURANT.hours} · ${RESTAURANT.hoursDetail}`,
+                                      value: `${t(RESTAURANT.hours)} · ${t(RESTAURANT.hoursDetail)}`,
                                   }),
                                   Detail({
                                       icon: 'photo_camera',
@@ -252,7 +255,7 @@ export const VisitSection = ({ isMobile }) =>
                                       wrap: true,
                                       children: [
                                           Button({
-                                              text: 'Get directions',
+                                              text: t('Get directions'),
                                               iconLeft: 'map',
                                               size: 'large',
                                               borderRadius: 999,
@@ -262,7 +265,7 @@ export const VisitSection = ({ isMobile }) =>
                                               onPress: () => openExternal(RESTAURANT.directions),
                                           }),
                                           Button({
-                                              text: 'Call',
+                                              text: t('Call'),
                                               iconLeft: 'phone',
                                               variant: 'outlined',
                                               size: 'large',
@@ -299,9 +302,9 @@ export const VisitSection = ({ isMobile }) =>
                         gap: 16,
                         renderItem: (entry) =>
                             Accordion({
-                                title: entry.question,
+                                title: t(entry.question),
                                 children: Text({
-                                    text: entry.answer,
+                                    text: t(entry.answer),
                                     size: 14,
                                     color: colors.textSecondary,
                                     lineHeight: 1.5,

@@ -6,6 +6,7 @@ import { Button, Container } from 'flet-box';
 import { colors } from '../theme.js';
 import { ROUTES } from '../data/content.js';
 import { goToSection } from '../utils/links.js';
+import { t } from '../utils/i18n.js';
 import { Section } from '../components/ui/Section.js';
 import { SectionHeading } from '../components/ui/SectionHeading.js';
 import { FlavorBand } from '../components/sections/FlavorBand.js';
@@ -30,7 +31,7 @@ const CartaHeader = ({ isMobile }) =>
                 icon: 'restaurant',
             }),
             Button({
-                text: 'Back to the house',
+                text: t('Back to the house'),
                 iconLeft: 'arrow_back',
                 variant: 'text',
                 size: 'large',

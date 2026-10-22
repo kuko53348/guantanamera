@@ -8,6 +8,7 @@ import { RESTAURANT, ROUTES } from '../../data/content.js';
 import { callRestaurant, goToSection } from '../../utils/links.js';
 import { Pill } from '../ui/Pill.js';
 import { Section } from '../ui/Section.js';
+import { isCaseless, t } from '../../utils/i18n.js';
 
 const MetaItem = ({ icon, label }) =>
     Row({
@@ -15,7 +16,7 @@ const MetaItem = ({ icon, label }) =>
         alignItems: 'center',
         children: [
             Icon({ name: icon, size: 16, color: colors.primary }),
-            Text({ text: label, size: 14, weight: 500, color: colors.textSecondary }),
+            Text({ text: t(label), size: 14, weight: 500, color: colors.textSecondary }),
         ],
     });
 
@@ -65,15 +66,15 @@ const HeroCopy = ({ isMobile }) =>
                 alignItems: 'flex-start',
                 children: [
                     Text({
-                        text: 'Varadero · Matanzas · Cuba',
+                        text: t('Varadero · Matanzas · Cuba'),
                         size: 12,
                         weight: 600,
                         color: colors.primary,
-                        letterSpacing: 2,
-                        textTransform: 'uppercase',
+                        letterSpacing: isCaseless() ? 0 : 2,
+                        textTransform: isCaseless() ? 'none' : 'uppercase',
                     }),
                     Text({
-                        text: 'Walk through the blue door. Taste the real Cuba.',
+                        text: t('Walk through the blue door. Taste the real Cuba.'),
                         size: 32,
                         weight: 700,
                         color: colors.text,
@@ -81,7 +82,7 @@ const HeroCopy = ({ isMobile }) =>
                         lineHeight: 1.2,
                     }),
                     Text({
-                        text: 'Cuban criollo cooking, slow-roasted lechón and piña coladas by the sea — served every day inside Plaza América, a two-minute walk from the sand.',
+                        text: t('Cuban criollo cooking, slow-roasted lechón and piña coladas by the sea — served every day inside Plaza América, a two-minute walk from the sand.'),
                         size: 18,
                         color: colors.textSecondary,
                         lineHeight: 1.5,
@@ -93,7 +94,7 @@ const HeroCopy = ({ isMobile }) =>
                 wrap: true,
                 children: [
                     Button({
-                        text: 'Explore the menu',
+                        text: t('Explore the menu'),
                         iconRight: 'arrow_forward',
                         size: 'large',
                         borderRadius: 999,

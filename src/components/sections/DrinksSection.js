@@ -4,6 +4,7 @@
 import { Column, Container, Icon, Image, Row, Text, border, rgba } from 'flet-box';
 import { colors, fonts } from '../../theme.js';
 import { BOTTLES, DRINKS } from '../../data/content.js';
+import { isCaseless, t, tTime } from '../../utils/i18n.js';
 import { Grid } from '../ui/Grid.js';
 import { Section } from '../ui/Section.js';
 import { SectionHeading } from '../ui/SectionHeading.js';
@@ -46,7 +47,7 @@ const DrinkCard = (drink) =>
                         lineHeight: 1.2,
                     }),
                     Text({
-                        text: drink.description,
+                        text: t(drink.description),
                         size: 14,
                         color: rgba(255, 255, 255, 0.72),
                         lineHeight: 1.5,
@@ -58,7 +59,7 @@ const DrinkCard = (drink) =>
                         gap: 8,
                         children: [
                             Text({
-                                text: drink.ingredients.join(' · '),
+                                text: drink.ingredients.map(t).join(' · '),
                                 size: 12,
                                 color: rgba(255, 255, 255, 0.6),
                                 lineHeight: 1.5,
@@ -69,7 +70,7 @@ const DrinkCard = (drink) =>
                                 children: [
                                     Icon({ name: 'schedule', size: 16, color: rgba(255, 255, 255, 0.6) }),
                                     Text({
-                                        text: drink.time,
+                                        text: tTime(drink.time),
                                         size: 12,
                                         color: rgba(255, 255, 255, 0.6),
                                     }),
@@ -132,15 +133,15 @@ export const DrinksSection = ({ isMobile }) =>
                 alignItems: 'flex-start',
                 children: [
                     Text({
-                        text: 'Behind the bar',
+                        text: t('Behind the bar'),
                         size: 12,
                         weight: 600,
                         color: rgba(255, 255, 255, 0.6),
-                        letterSpacing: 2,
-                        textTransform: 'uppercase',
+                        letterSpacing: isCaseless() ? 0 : 2,
+                        textTransform: isCaseless() ? 'none' : 'uppercase',
                     }),
                     Text({
-                        text: 'The shelf.',
+                        text: t('The shelf.'),
                         size: 24,
                         weight: 700,
                         color: colors.white,
@@ -148,7 +149,9 @@ export const DrinksSection = ({ isMobile }) =>
                         lineHeight: 1.2,
                     }),
                     Text({
-                        text: 'Ron, whisky, gin, wine and the bottles we save for the right night. Ask for a pour, a flight, or the story behind the label.',
+                        text: t(
+                            'Ron, whisky, gin, wine and the bottles we save for the right night. Ask for a pour, a flight, or the story behind the label.',
+                        ),
                         size: 14,
                         color: rgba(255, 255, 255, 0.72),
                         lineHeight: 1.5,
@@ -170,7 +173,7 @@ export const DrinksSection = ({ isMobile }) =>
                 children: [
                     Icon({ name: 'music_note', size: 16, color: rgba(255, 255, 255, 0.6) }),
                     Text({
-                        text: 'On select evenings, son cubano fills the terrace. Stay for one more.',
+                        text: t('On select evenings, son cubano fills the terrace. Stay for one more.'),
                         size: 12,
                         color: rgba(255, 255, 255, 0.6),
                         align: 'center',

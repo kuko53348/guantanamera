@@ -5,6 +5,7 @@
 // Text keeps every color explicit and avoids a global re-render on tab change.
 import { Column, Container, Row, Text, border } from 'flet-box';
 import { colors } from '../../theme.js';
+import { t } from '../../utils/i18n.js';
 
 // Survives the full re-render triggered by a viewport change.
 let activeIndex = 0;
@@ -39,7 +40,7 @@ export const SegmentedTabs = ({ tabs, panels, isMobile = false }) => {
 
     tabs.forEach((tab, index) => {
         const label = Text({
-            text: isMobile ? tab.short || tab.label : tab.label,
+            text: t(isMobile ? tab.short || tab.label : tab.label),
             size: 12,
             weight: index === activeIndex ? 600 : 500,
             color: index === activeIndex ? colors.white : colors.textSecondary,

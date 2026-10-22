@@ -3,6 +3,7 @@ import { Button, Column, Container, Icon, Image, Row, Text, border } from 'flet-
 import { colors, fonts } from '../../theme.js';
 import { ROUTES, SIGNATURES } from '../../data/content.js';
 import { goToSection } from '../../utils/links.js';
+import { isCaseless, t, tTime } from '../../utils/i18n.js';
 import { Grid } from '../ui/Grid.js';
 import { Section } from '../ui/Section.js';
 import { SectionHeading } from '../ui/SectionHeading.js';
@@ -57,7 +58,7 @@ const SignatureCard = (dish, isMobile) =>
                                 children: [
                                     Icon({ name: 'schedule', size: 16, color: colors.primary }),
                                     Text({
-                                        text: dish.time,
+                                        text: tTime(dish.time),
                                         size: 12,
                                         weight: 500,
                                         color: colors.textSecondary,
@@ -67,21 +68,21 @@ const SignatureCard = (dish, isMobile) =>
                         ],
                     }),
                     Text({
-                        text: dish.english,
+                        text: t(dish.english),
                         size: 12,
                         weight: 600,
                         color: colors.primary,
-                        letterSpacing: 2,
-                        textTransform: 'uppercase',
+                        letterSpacing: isCaseless() ? 0 : 2,
+                        textTransform: isCaseless() ? 'none' : 'uppercase',
                     }),
                     Text({
-                        text: dish.description,
+                        text: t(dish.description),
                         size: 14,
                         color: colors.textSecondary,
                         lineHeight: 1.5,
                     }),
                     Text({
-                        text: dish.ingredients.join(' · '),
+                        text: dish.ingredients.map(t).join(' · '),
                         size: 12,
                         color: colors.textDisabled,
                         lineHeight: 1.5,
@@ -119,12 +120,12 @@ export const SignatureSection = ({ isMobile }) =>
                 gap: 16,
                 children: [
                     Text({
-                        text: 'From criollo classics to lobster combos — the full carta is one tap away.',
+                        text: t('From criollo classics to lobster combos — the full carta is one tap away.'),
                         size: 14,
                         color: colors.textSecondary,
                     }),
                     Button({
-                        text: 'See the full menu',
+                        text: t('See the full menu'),
                         iconRight: 'arrow_forward',
                         variant: 'text',
                         size: 'large',

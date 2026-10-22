@@ -20,8 +20,9 @@ export const RESTAURANT = {
 };
 
 // Each anchor names the page it lives on: the story and the visit stay on the
-// landing page, the carta (menu, plates, bar, photos) is its own screen.
-export const ROUTES = { home: '/', menu: '/menu' };
+// landing page, the carta (menu, plates, bar, photos) is its own screen, and the
+// thank-you note to the team has its own page so it never interrupts a guest.
+export const ROUTES = { home: '/', menu: '/menu', developer: '/developer' };
 
 export const NAV_LINKS = [
     { label: 'Our story', id: 'story', route: ROUTES.home },
@@ -30,6 +31,11 @@ export const NAV_LINKS = [
     { label: 'Drinks', id: 'drinks', route: ROUTES.menu },
     { label: 'Gallery', id: 'gallery', route: ROUTES.menu },
     { label: 'Visit', id: 'visit', route: ROUTES.home },
+    // The thank-you page is a route, not a section, so its nav entry carries
+    // ROUTES.developer. It sits in this list on purpose: the gratitude is the
+    // one thing on the site a guest should not have to scroll to the footer to
+    // find.
+    { label: 'Gratitude', id: 'top', route: ROUTES.developer, icon: 'favorite' },
 ];
 
 export const SIGNATURES = [

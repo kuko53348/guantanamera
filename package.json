@@ -12,6 +12,7 @@
     "assets:clean": "flet-box prune-assets --apply",
     "images": "flet-box images assets/landing --budget 40 --referenced",
     "build": "flet-box createBundle www",
+    "postbuild": "node scripts/spa-fallback.mjs",
     "start": "npm run dev",
     "android:init": "npm run build && cap add android",
     "android:sync": "npm run build && cap sync android && npm run android:icons",

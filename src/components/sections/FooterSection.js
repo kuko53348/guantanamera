@@ -3,11 +3,12 @@ import { Button, Column, Container, Icon, Row, Text, border, rgba } from 'flet-b
 import { colors, fonts, layout } from '../../theme.js';
 import { NAV_LINKS, RESTAURANT, ROUTES } from '../../data/content.js';
 import { callRestaurant, goToSection, openExternal } from '../../utils/links.js';
+import { isCaseless, t } from '../../utils/i18n.js';
 import { TileStrip } from './FlavorBand.js';
 
 const FooterLink = ({ label, id, route }) =>
     Text({
-        text: label,
+        text: t(label),
         size: 14,
         color: rgba(255, 255, 255, 0.72),
         cursor: 'pointer',
@@ -20,12 +21,12 @@ const FooterColumn = ({ title, children }) =>
         alignItems: 'flex-start',
         children: [
             Text({
-                text: title,
+                text: t(title),
                 size: 12,
                 weight: 600,
                 color: rgba(255, 255, 255, 0.6),
-                letterSpacing: 2,
-                textTransform: 'uppercase',
+                letterSpacing: isCaseless() ? 0 : 2,
+                textTransform: isCaseless() ? 'none' : 'uppercase',
             }),
             ...children,
         ],
@@ -39,7 +40,10 @@ const SiteColumn = () =>
                 gap: 8,
                 alignItems: 'center',
                 cursor: 'pointer',
-                onPress: () => openExternal(RESTAURANT.developer),
+                // The GitHub profile lives on the developer page now: the footer
+                // row is the door into it, so a guest who wants to know who wrote
+                // this lands on the people, not on a code host.
+                onPress: () => goToSection('top', ROUTES.developer),
                 children: [
                     Icon({ name: 'code', size: 20, color: colors.white }),
                     Text({
@@ -50,9 +54,23 @@ const SiteColumn = () =>
                 ],
             }),
             Text({
-                text: 'Design & development',
+                text: t('Design & development'),
                 size: 14,
                 color: rgba(255, 255, 255, 0.72),
+            }),
+            Row({
+                gap: 8,
+                alignItems: 'center',
+                cursor: 'pointer',
+                onPress: () => goToSection('collective', ROUTES.developer),
+                children: [
+                    Icon({ name: 'favorite', size: 18, color: colors.white }),
+                    Text({
+                        text: t('Thanks to the team'),
+                        size: 14,
+                        color: rgba(255, 255, 255, 0.72),
+                    }),
+                ],
             }),
         ],
     });
@@ -89,7 +107,7 @@ export const FooterSection = ({ isMobile }) =>
                             alignItems: isMobile ? 'flex-start' : 'center',
                             children: [
                                 Text({
-                                    text: 'Your table is waiting.',
+                                    text: t('Your table is waiting.'),
                                     size: 32,
                                     weight: 700,
                                     color: colors.white,
@@ -98,7 +116,7 @@ export const FooterSection = ({ isMobile }) =>
                                     lineHeight: 1.2,
                                 }),
                                 Text({
-                                    text: `${RESTAURANT.hours} · ${RESTAURANT.hoursDetail} · ${RESTAURANT.addressShort}`,
+                                    text: `${t(RESTAURANT.hours)} · ${t(RESTAURANT.hoursDetail)} · ${t(RESTAURANT.addressShort)}`,
                                     size: 16,
                                     color: rgba(255, 255, 255, 0.72),
                                     align: isMobile ? 'left' : 'center',
@@ -109,7 +127,7 @@ export const FooterSection = ({ isMobile }) =>
                                     justifyContent: isMobile ? 'flex-start' : 'center',
                                     children: [
                                         Button({
-                                            text: 'Call to reserve',
+                                            text: t('Call to reserve'),
                                             iconLeft: 'phone',
                                             size: 'large',
                                             borderRadius: 999,
@@ -119,7 +137,7 @@ export const FooterSection = ({ isMobile }) =>
                                             onPress: () => callRestaurant(RESTAURANT.phoneHref),
                                         }),
                                         Button({
-                                            text: 'Get directions',
+                                            text: t('Get directions'),
                                             iconLeft: 'map',
                                             variant: 'outlined',
                                             size: 'large',
@@ -150,7 +168,7 @@ export const FooterSection = ({ isMobile }) =>
                                                   fontFamily: fonts.display,
                                               }),
                                               Text({
-                                                  text: 'Cuban soul, served daily in Varadero.',
+                                                  text: t('Cuban soul, served daily in Varadero.'),
                                                   size: 14,
                                                   color: rgba(255, 255, 255, 0.72),
                                               }),
@@ -164,7 +182,7 @@ export const FooterSection = ({ isMobile }) =>
                                           title: 'Visit',
                                           children: [
                                               Text({
-                                                  text: RESTAURANT.address,
+                                                  text: t(RESTAURANT.address),
                                                   size: 14,
                                                   color: rgba(255, 255, 255, 0.72),
                                                   lineHeight: 1.5,
@@ -175,7 +193,7 @@ export const FooterSection = ({ isMobile }) =>
                                                   color: colors.white,
                                               }),
                                               Text({
-                                                  text: `${RESTAURANT.hours} · ${RESTAURANT.hoursDetail}`,
+                                                  text: `${t(RESTAURANT.hours)} · ${t(RESTAURANT.hoursDetail)}`,
                                                   size: 14,
                                                   color: rgba(255, 255, 255, 0.72),
                                               }),
@@ -203,7 +221,7 @@ export const FooterSection = ({ isMobile }) =>
                                                   ],
                                               }),
                                               Text({
-                                                  text: 'Son cubano on select evenings.',
+                                                  text: t('Son cubano on select evenings.'),
                                                   size: 14,
                                                   color: rgba(255, 255, 255, 0.72),
                                               }),
@@ -231,7 +249,7 @@ export const FooterSection = ({ isMobile }) =>
                                                   fontFamily: fonts.display,
                                               }),
                                               Text({
-                                                  text: 'Cuban soul, served daily in Varadero.',
+                                                  text: t('Cuban soul, served daily in Varadero.'),
                                                   size: 14,
                                                   color: rgba(255, 255, 255, 0.72),
                                               }),
@@ -254,7 +272,7 @@ export const FooterSection = ({ isMobile }) =>
                                               title: 'Visit',
                                               children: [
                                                   Text({
-                                                      text: RESTAURANT.address,
+                                                      text: t(RESTAURANT.address),
                                                       size: 14,
                                                       color: rgba(255, 255, 255, 0.72),
                                                       lineHeight: 1.5,
@@ -265,7 +283,7 @@ export const FooterSection = ({ isMobile }) =>
                                                       color: colors.white,
                                                   }),
                                                   Text({
-                                                      text: `${RESTAURANT.hours} · ${RESTAURANT.hoursDetail}`,
+                                                      text: `${t(RESTAURANT.hours)} · ${t(RESTAURANT.hoursDetail)}`,
                                                       size: 14,
                                                       color: rgba(255, 255, 255, 0.72),
                                                   }),
@@ -298,7 +316,7 @@ export const FooterSection = ({ isMobile }) =>
                                                       ],
                                                   }),
                                                   Text({
-                                                      text: 'Son cubano on select evenings.',
+                                                      text: t('Son cubano on select evenings.'),
                                                       size: 14,
                                                       color: rgba(255, 255, 255, 0.72),
                                                   }),
@@ -324,7 +342,7 @@ export const FooterSection = ({ isMobile }) =>
                             paddingTop: 24,
                             children: [
                                 Text({
-                                    text: '© 2026 Guantanamera · Varadero, Cuba',
+                                    text: t('© 2026 Guantanamera · Varadero, Cuba'),
                                     size: 12,
                                     color: rgba(255, 255, 255, 0.6),
                                 }),
@@ -333,12 +351,12 @@ export const FooterSection = ({ isMobile }) =>
                                     alignItems: 'center',
                                     children: [
                                         Text({
-                                            text: 'Hecho con sabor en Varadero',
+                                            text: t('Hecho con sabor en Varadero'),
                                             size: 12,
                                             color: rgba(255, 255, 255, 0.6),
                                         }),
                                         Text({
-                                            text: 'Back to top',
+                                            text: t('Back to top'),
                                             size: 12,
                                             weight: 600,
                                             color: colors.white,

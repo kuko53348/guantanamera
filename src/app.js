@@ -1,10 +1,11 @@
-// app.js — Guantanamera restaurant site: two screens, one chrome.
-// The landing page is the story; the carta is its own page. Both scroll inside
-// the Scaffold body, so the nav is the only thing that persists across them.
+// app.js — Guantanamera restaurant site: three screens, one chrome.
+// The landing page is the story, the carta is its own page and the thank-you
+// note to the team is a third. All three scroll inside the Scaffold body, so the
+// nav is the only thing that persists across them.
 import { Scaffold, dimensions, runApp, useState } from 'flet-box';
 import { colors } from './theme.js';
 import { LandingNav } from './components/layouts/LandingNav.js';
-import { LandingScreen, MenuScreen } from './screens/index.js';
+import { DeveloperScreen, LandingScreen, MenuScreen } from './screens/index.js';
 import { ROUTES } from './data/content.js';
 
 const MOBILE_BREAKPOINT = 1024;
@@ -36,6 +37,7 @@ const App = () => {
         routes: {
             [ROUTES.home]: () => LandingScreen({ isMobile: mobile }),
             [ROUTES.menu]: () => MenuScreen({ isMobile: mobile }),
+            [ROUTES.developer]: () => DeveloperScreen({ isMobile: mobile }),
         },
         appBar: LandingNav({ isMobile: mobile }),
         backgroundColor: colors.background,

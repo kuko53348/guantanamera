@@ -4,6 +4,7 @@
 import { Container, Icon, Image, Row, Text, rgba } from 'flet-box';
 import { colors } from '../../theme.js';
 import { DISH_GALLERY } from '../../data/content.js';
+import { t } from '../../utils/i18n.js';
 import { Grid } from '../ui/Grid.js';
 import { Section } from '../ui/Section.js';
 import { SectionHeading } from '../ui/SectionHeading.js';
@@ -74,7 +75,7 @@ export const DishBoard = ({ isMobile }) =>
                 children: [
                     Icon({ name: 'set_meal', size: 16, color: colors.secondary }),
                     Text({
-                        text: 'The card changes with the morning catch — ask your server what came in today.',
+                        text: t('The card changes with the morning catch — ask your server what came in today.'),
                         size: 12,
                         color: colors.textSecondary,
                         align: 'center',

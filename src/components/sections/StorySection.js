@@ -5,6 +5,7 @@ import { STATS } from '../../data/content.js';
 import { Grid } from '../ui/Grid.js';
 import { Section } from '../ui/Section.js';
 import { SectionHeading } from '../ui/SectionHeading.js';
+import { t } from '../../utils/i18n.js';
 
 const StatCard = (stat) =>
     Container({
@@ -15,7 +16,7 @@ const StatCard = (stat) =>
         gap: 4,
         children: [
             Text({
-                text: stat.value,
+                text: t(stat.value),
                 size: 24,
                 weight: 700,
                 color: colors.primary,
@@ -23,7 +24,7 @@ const StatCard = (stat) =>
                 lineHeight: 1.2,
             }),
             Text({
-                text: stat.label,
+                text: t(stat.label),
                 size: 12,
                 color: colors.textSecondary,
                 lineHeight: 1.5,
@@ -100,19 +101,19 @@ const StoryCopy = ({ isMobile }) =>
                 icon: 'wb_sunny',
             }),
             Text({
-                text: 'Guantanamera is not a concept. It is a Cuban home whose dining room happens to open onto Varadero. The blue sign leads to white linens, dark wood and the smell of sofrito — and past the glass, the palms do the decorating.',
+                text: t('Guantanamera is not a concept. It is a Cuban home whose dining room happens to open onto Varadero. The blue sign leads to white linens, dark wood and the smell of sofrito — and past the glass, the palms do the decorating.'),
                 size: 16,
                 color: colors.textSecondary,
                 lineHeight: 1.5,
             }),
             Text({
-                text: 'Our cooks start early: beans simmer, pork marinates in sour orange and garlic, plantains wait to be smashed. Nothing is rushed. That is the recipe, and it has been for every table we have set.',
+                text: t('Our cooks start early: beans simmer, pork marinates in sour orange and garlic, plantains wait to be smashed. Nothing is rushed. That is the recipe, and it has been for every table we have set.'),
                 size: 16,
                 color: colors.textSecondary,
                 lineHeight: 1.5,
             }),
             Text({
-                text: '“Sabor cubano, sin prisa.” — Cuban flavor, without hurry.',
+                text: t('“Sabor cubano, sin prisa.” — Cuban flavor, without hurry.'),
                 size: 18,
                 color: colors.text,
                 weight: 600,
