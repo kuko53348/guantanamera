@@ -9,7 +9,8 @@
       "assets/landing/*.webp",
       "assets/landing/*.svg",
       "assets/landing/favicon.png",
-      "assets/landing/og-cover.jpg"
+      "assets/landing/og-cover.jpg",
+      "assets/developer/*.webp"
     ]
   }
 }
