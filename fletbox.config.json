@@ -1,6 +1,6 @@
 {
   "update": {
-    "mode": "prompt",
+    "url": "https://kuko53348.github.io/guantanamera/",
     "channel": "stable",
     "mandatory": false,
     "minNativeVersion": "0.0.0",
