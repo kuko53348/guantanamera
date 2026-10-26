@@ -1,6 +1,9 @@
 node_modules/
 dist/
 www/
+android/
+androide/
+release/
 ios/build/
 ios/App/Pods/
 ios/App/App/public/
